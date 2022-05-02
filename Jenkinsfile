@@ -26,40 +26,40 @@ node('cloner'){
 
 DEPLOYMENTDESCRIPTOR = '''
 {
-    \\"general\\": {
-        \\"serviceId\\": \\"s000004/s000004-grafana-prueba\\",
-        \\"appname\\": \\"grafana-prueba\\",
-        \\"grafanaAdminUser\\": \\"admin\\",
-        \\"identity\\": {
-            \\"approlename\\": \\"s000004\\"
+    "general": {
+        "serviceId": "s000004/s000004-grafana-prueba",
+        "appname": "grafana-prueba",
+        "grafanaAdminUser": "admin",
+        "identity": {
+            "approlename": "s000004"
         },
-        \\"network\\": {
-            \\"networkName\\": \\"s000004-core\\"
+        "network": {
+            "networkName": "s000004-core"
         },
-        \\"resources\\": {
-            \\"INSTANCES\\": 1,
-            \\"CPUs\\": 1,
-            \\"MEM\\": 1024
+        "resources": {
+            "INSTANCES": 1,
+            "CPUs": 1,
+            "MEM": 1024
         }
     },
-    \\"settings\\": {
-        \\"logs\\": {
-            \\"nginxLogLevel\\": \\"error\\"
+    "settings": {
+        "logs": {
+            "nginxLogLevel": "error"
         }
     },
-    \\"placement\\": {
-        \\"marathonConstraintSection\\": {
-            \\"marathonConstraintName\\": \\"\\",
-            \\"marathonConstraintOperator\\": \\"\\",
-            \\"marathonConstraintValue\\": \\"\\"
+    "placement": {
+        "marathonConstraintSection": {
+            "marathonConstraintName": "",
+            "marathonConstraintOperator": "",
+            "marathonConstraintValue": ""
         }
     },
-    \\"environment\\": {
-        \\"grafanaConsulDomain\\": \\"\\",
-        \\"grafanaSSOURI\\": \\"\\",
-        \\"vault\\": {
-            \\"vaultHosts\\": \\"vault.service.eos.yankee.labs.stratio.com\\",
-            \\"vaultPort\\": 8200
+    "environment": {
+        "grafanaConsulDomain": "",
+        "grafanaSSOURI": "",
+        "vault": {
+            "vaultHosts": "vault.service.eos.yankee.labs.stratio.com",
+            "vaultPort": 8200
         }
     }
 }'''.stripMargin().stripIndent()
