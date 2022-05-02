@@ -9,10 +9,15 @@ node('cloner'){
         // Clones the repository from the current branch name
         echo 'Make the output directory'
         sh 'mkdir -p build'
-
+        sh("pwd")
+        sh("ls -lha")
+    
         echo 'Cloning files from (branch: "' + branchName + '" )'
         dir('build') {
             git branch: branchName, credentialsId: 	gitCredentials, url: repoUrl
+            sh("pwd")
+            sh("ls -lha")
+
         }
     } 
 }  
