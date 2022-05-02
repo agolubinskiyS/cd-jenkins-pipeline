@@ -4,17 +4,18 @@
 String branchName = "master"
 String gitCredentials = "git-credentials-s"
 String repoUrl = "https://github.com/agolubinskiyS/cd-jenkins-pipeline.git"
+node('cloner'){
+    stage('GIT') {
+        // Clones the repository from the current branch name
+        echo 'Make the output directory'
+        sh 'mkdir -p build'
 
-stage('GIT') {
-    // Clones the repository from the current branch name
-    echo 'Make the output directory'
-    sh 'mkdir -p build'
-
-    echo 'Cloning files from (branch: "' + branchName + '" )'
-    dir('build') {
-        git branch: branchName, credentialsId: 	gitCredentials, url: repoUrl
-    }
-}    
+        echo 'Cloning files from (branch: "' + branchName + '" )'
+        dir('build') {
+            git branch: branchName, credentialsId: 	gitCredentials, url: repoUrl
+        }
+    } 
+}  
 
 
 
