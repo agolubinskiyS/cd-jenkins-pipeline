@@ -76,7 +76,7 @@ def DEV = {
 
 }
 
-DEV()
+DEV.call()
 
 
 
