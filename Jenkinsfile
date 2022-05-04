@@ -70,9 +70,9 @@ DEPLOYMENTDESCRIPTOR = '''
 // params = [url: 'https://mi-url.com', tenant: 's000004', deploymentDescriptor: DEPLOYMENTDESCRIPTOR, model: 'basic', version: '11.0.1', service: 'grafana-eos']
 
 DEV = {
-
-    params = [url: 'https://mi-url.com', tenant: 's000004', model: 'basic', version: '11.0.1', service: 'grafana-eos']
     echo DEPLOYMENTDESCRIPTOR
+    params = [url: 'https://mi-url.com', tenant: 's000004', model: 'basic', version: '11.0.1', service: 'grafana-eos']
+
 
 }
 
