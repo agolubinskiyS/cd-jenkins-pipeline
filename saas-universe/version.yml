@@ -1,0 +1,6 @@
+package:
+  groupId: "com.stratio.tais"
+  artifactId: "bdl-masters-core"
+  version: "110.0.4"
+tais:
+  compatibility: ">=0.7.x"

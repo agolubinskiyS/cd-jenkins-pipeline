@@ -1,0 +1,993 @@
+{
+  "data": {
+    "serviceName": "bdl-masters-core",
+    "model": "default",
+    "version": "110.0.3-SNAPSHOT",
+    "description": "Component used to manager the metadata governance from CRUD operations and Gosec Permissions.",
+    "framework": false,
+    "highAvailability": false,
+    "healthChecks": {
+      "tcp": [],
+      "http": [
+        {
+          "gracePeriodSeconds": 300,
+          "intervalSeconds": 60,
+          "maxConsecutiveFailures": 3,
+          "timeoutSeconds": 20,
+          "delaySeconds": 15,
+          "ignoreHttp1xx": false,
+          "path": "/health",
+          "portIndex": 1
+        }
+      ],
+      "command": [],
+      "mesos": []
+    },
+    "networking": {
+      "expose": [],
+      "network": {
+        "networkType": "user",
+        "ports": [
+          {
+            "containerPort": 8090,
+            "hostPort": 8090,
+            "servicePort": 0,
+            "protocol": "tcp",
+            "name": "app"
+          },
+          {
+            "servicePort": 0,
+            "protocol": "tcp",
+            "name": "metrics",
+            "labels": {
+              "metrics_path": "/prometheus"
+            },
+            "containerPort": 8091
+          }
+        ],
+        "requirePorts": true
+      }
+    },
+    "container": {
+      "runners": [
+        {
+          "typeClass": "com.stratio.tais.persistence.model.service.container.DockerRunner",
+          "image": "${eos.dockerRegistry}/bdl-masters-core:2.0.1-SNAPSHOT",
+          "forcePullImage": true,
+          "privileged": false,
+          "parameters": []
+        }
+      ]
+    },
+    "secrets": {
+      "appRole": "role",
+      "secretRole": "open"
+    },
+    "postInstall": [],
+    "prerequisites": [
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
+        "title": "PostgreSQL (Modules dependencies)",
+        "description": "PostgreSQL stores all the metadata",
+        "serviceName": "postgres"
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
+        "title": "PostgreSQL service name(Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-core data. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "serviceName": "postgres",
+        "useInstanceName": true
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
+        "title": "PostgreSQL service name(Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-coremetadata. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "serviceName": "postgres",
+        "useInstanceName": true,
+        "usePathNotation": true
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
+        "title": "Pgbouncer (Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-core metadata. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "serviceName": "pgbouncer"
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
+        "title": "Create database in postgres (Modules dependencies)",
+        "description": "Creates database in postgres.",
+        "expect": [
+          200,
+          304
+        ],
+        "verb": "POST",
+        "path": "https://${postgresName}.marathon.mesos:8080/v1/dbaas/create/database/${postgresDatabase}",
+        "body": {},
+        "headers": null,
+        "enabled": "${executePostgresPrerequisites}"
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
+        "title": "Creates user in Gosec",
+        "description": "Creates user needed in the ACL's related to the service being deployed (if the is user already in LDAP this is not required)",
+        "expect": [
+          201,
+          409
+        ],
+        "verb": "POST",
+        "path": "https://gosec-identities-daas.marathon.mesos:8443/identities/users",
+        "body": {
+          "gids": [],
+          "uid": "${tenantIdentity}",
+          "tids": [
+            "${tenantId}"
+          ],
+          "name": "${tenantIdentity}",
+          "email": "${tenantIdentity}@stratio.com"
+        },
+        "headers": null,
+        "enabled": "${executePostgresPrerequisites}"
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
+        "title": "Create Postgres policy in Gosec",
+        "description": "Create group for ACLS for the service being deployed (is user already in LDAP this is not required)",
+        "expect": [
+          201,
+          409
+        ],
+        "verb": "POST",
+        "path": "https://gosec-services-daas.marathon.mesos:8443/policies",
+        "body": {
+          "gids": [],
+          "uids": [
+            "${tenantIdentity}"
+          ],
+          "name": "${tenantIdentity}-pgacl",
+          "services": [
+            {
+              "instances": [
+                {
+                  "acls": [
+                    {
+                      "resourceType": "Database",
+                      "name": "${postgresDatabase}",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Create",
+                        "Connect",
+                        "Temporary"
+                      ],
+                      "actionsDeny": []
+                    },
+                    {
+                      "resourceType": "Schema",
+                      "name": "${postgresDatabase}.*",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Create",
+                        "Usage"
+                      ],
+                      "actionsDeny": []
+                    },
+                    {
+                      "resourceType": "Table",
+                      "name": "${postgresDatabase}.*",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Select",
+                        "Insert",
+                        "Update",
+                        "Delete",
+                        "Truncate",
+                        "References",
+                        "Trigger"
+                      ],
+                      "actionsDeny": []
+                    },
+                    {
+                      "resourceType": "Function",
+                      "name": "${postgresDatabase}.*",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Execute"
+                      ],
+                      "actionsDeny": []
+                    },
+                    {
+                      "resourceType": "View",
+                      "name": "${postgresDatabase}.*",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Select",
+                        "Insert",
+                        "Update",
+                        "Delete",
+                        "Truncate",
+                        "References",
+                        "Trigger"
+                      ],
+                      "actionsDeny": []
+                    },
+                    {
+                      "resourceType": "Sequence",
+                      "name": "${postgresDatabase}.*",
+                      "recursive": true,
+                      "actionsAllow": [
+                        "Select",
+                        "Update",
+                        "Usage"
+                      ],
+                      "actionsDeny": []
+                    }
+                  ],
+                  "sid": "${postgresServiceId}",
+                  "status": "READY"
+                }
+              ],
+              "serviceType": "postgres"
+            }
+          ],
+          "tid": "${tenantId}"
+        },
+        "headers": null,
+        "enabled": "${aclCreationForSecuredPostgres}"
+      },
+      {
+        "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteInfo",
+        "title": "Calico networks",
+        "description": "All the bdl-master-core apis work under the same network. Please set the network name in General > Calico Network > 'Network name'."
+      }
+    ],
+    "constraints": [
+      "${marathonConstraintName}",
+      "${marathonConstraintOperator}",
+      "${marathonConstraintValue}"
+    ],
+    "discovery": {
+      "pattern": "*"
+    }
+  },
+  "parameters": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "general": {
+        "type": "object",
+        "additionalProperties": false,
+        "ui": {
+          "component": "standard"
+        },
+        "name": "general",
+        "title": "General",
+        "description": "Tab to configure the default deployment of a maintenance-core.",
+        "properties": {
+          "maintenanceCoreServiceName": {
+            "description": "Service ID used to name the maintenance-core instance.",
+            "type": "string",
+            "required": true,
+            "readOnly": false,
+            "pattern": "(^[^/][a-z0-9-]+)$",
+            "application": false,
+            "internalName": "SERVICE_NAME",
+            "ui": {
+              "updatable": false
+            },
+            "title": "Maintenance Core service name",
+            "default": "bdl-masters-core"
+          },
+          "eosTenantId": {
+            "description": "Tenant where maintenance-core will be deployed.",
+            "type": "string",
+            "required": false,
+            "readOnly": true,
+            "pattern": "(^[a-z0-9]+)$",
+            "application": false,
+            "level": 2,
+            "internalName": "EOS_TENANT",
+            "title": "Internal tenant id",
+            "default": "${tenantId}"
+          },
+          "serviceId": {
+            "description": "Final path given to the service being deployed",
+            "type": "string",
+            "required": true,
+            "readOnly": true,
+            "application": true,
+            "internalName": "SERVICE_ID",
+            "ui": {
+              "updatable": false
+            },
+            "title": "Maintenance Core service complete path",
+            "default": "${eosTenantId}/${eosTenantId}-${maintenanceCoreServiceName}"
+          },
+          "tenantIdentity": {
+            "description": "Identity for the tenant.",
+            "type": "string",
+            "required": true,
+            "readOnly": false,
+            "application": false,
+            "level": 2,
+            "internalName": "TENANT_IDENTITY",
+            "ui": {
+              "updatable": false
+            },
+            "title": "Service identity (usually same as service name)",
+            "default": "${eosTenantId}-${maintenanceCoreServiceName}"
+          },
+          "postgresql": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "postgresql",
+            "title": "PostgreSQL",
+            "description": "Section to configure PostgreSQL.",
+            "properties": {
+              "executePostgresPrerequisites": {
+                "description": "Whether to execute prerequisites automatically for this dlc-entity instance.",
+                "type": "boolean",
+                "required": true,
+                "readOnly": false,
+                "application": true,
+                "internalName": "PREREQUISITES_POSTGRES",
+                "title": "Execute Postgres prerequisites",
+                "default": true
+              },
+              "aclCreationForSecuredPostgres": {
+                "description": "Whether to execute ACL creation for a secured Postgres framework",
+                "type": "boolean",
+                "required": false,
+                "readOnly": false,
+                "application": true,
+                "internalName": "ACL_CREATION_FOR_SECURED_POSTGRES",
+                "ui": {
+                  "visible": {
+                    "executePostgresPrerequisites": true
+                  }
+                },
+                "title": "Trigger ACL creation for secured Postgres framework",
+                "default": true
+              },
+              "availablePgBouncer": {
+                "description": "Determines whether the Postgres connection will be be through a bouncer or directly to the postgres framework",
+                "type": "boolean",
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "AVAILABLE_PG_BOUNCER",
+                "title": "Available Postgres bouncer",
+                "default": true
+              },
+              "postgresPgHost": {
+                "description": "Postgres bouncer service name used to build the connection string.",
+                "type": "string",
+                "minLength": 3,
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "prerequisites.3",
+                "internalName": "POSTGRES_HOST",
+                "ui": {
+                  "visible": {
+                    "availablePgBouncer": true
+                  }
+                },
+                "title": "Postgres bouncer service name",
+                "enum": []
+              },
+              "postgresHost": {
+                "description": "Postgres service name used to build the connection string.",
+                "type": "string",
+                "minLength": 3,
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "prerequisites.0",
+                "internalName": "POSTGRES_HOST",
+                "ui": {
+                  "visible": {
+                    "availablePgBouncer": false
+                  }
+                },
+                "title": "Postgres framework service host",
+                "enum": []
+              },
+              "postgresName": {
+                "description": "Postgres service name used to build the connection string.",
+                "type": "string",
+                "minLength": 3,
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "prerequisites.1",
+                "internalName": "POSTGRES_NAME",
+                "title": "Postgres service name used for database and ACL creation requests",
+                "enum": []
+              },
+              "postgresServiceId": {
+                "description": "Postgres service name used to build the connection string.",
+                "type": "string",
+                "minLength": 3,
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "prerequisites.2",
+                "internalName": "POSTGRES_SERVICE_ID",
+                "title": "Postgres Service ID used for GoSec requests",
+                "enum": []
+              },
+              "postgresDatabase": {
+                "description": "Set the database name to use in Postgres e.g. postgres, dlc",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": false,
+                "pattern": "^[\\S]*$",
+                "application": false,
+                "level": 1,
+                "internalName": "POSTGRES_DATABASE",
+                "default": "master",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "Postgres Database"
+              },
+              "postgresSchema": {
+                "description": "Set the schema name to use in Postgres.",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "POSTGRES_SCHEMA",
+                "default": "mantenimiento_maestros",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "Postgres Schema"
+              },
+              "postgresUser": {
+                "description": "Postgres user.",
+                "type": "string",
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 2,
+                "internalName": "POSTGRES_USER",
+                "title": "Postgres user",
+                "default": "${tenantIdentity}"
+              }
+            },
+            "required": [
+              "postgresDatabase"
+            ]
+          },
+          "datarest": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "datarest",
+            "title": "Datarest API",
+            "description": "Section to configure access to Datarest API.",
+            "properties": {
+              "datarestURL": {
+                "description": "Set the DataRest URL API.",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": false,
+                "pattern": "^[\\S]*$",
+                "application": false,
+                "level": 1,
+                "internalName": "DATAREST_CONVENTION_HOST",
+                "default": "https://s000001-dg-datarest-truco-internal.s000001.marathon.mesos:8000",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "Datarest Internal API URL"
+              }
+            },
+            "required": []
+          },
+          "postRest": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "postgrest",
+            "title": "Postgrest API",
+            "description": "Section to configure access to postgrest API.",
+            "properties": {
+              "postrestURL": {
+                "description": "Set the postgrest Internal URL API.",
+                "type": "string",
+                "minLength": 1,
+                "required": false,
+                "readOnly": false,
+                "pattern": "^[\\S]*$",
+                "application": false,
+                "level": 1,
+                "internalName": "POSTGREST_REST_CONVENTION_HOST",
+                "default": "http://s000001-postgrest.s000001.marathon.mesos:3000",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "PostgRest Internal API URL"
+              }
+            },
+            "required": []
+          },
+          "gosec": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "gosec",
+            "title": "GoSec API",
+            "description": "Section to configure access to GoSec API.",
+            "properties": {
+              "gosecURL": {
+                "description": "Set the Gosec Internal URL API.",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": true,
+                "pattern": "^[\\S]*$",
+                "application": false,
+                "level": 1,
+                "internalName": "PERMISSION_USER_URL_FOR_GET_PERMISSIONS",
+                "default": "https://gosec-services-daas.marathon.mesos:8443",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Gosec Internal API URL"
+              },
+              "policiesDomainsPath": {
+                "description": "Policies Domains Gosec Path.",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": true,
+                "pattern": "^[\\S]*$",
+                "application": false,
+                "level": 1,
+                "internalName": "POLICIES_DOMAIN_PATH",
+                "default": "/policies/domains",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Policies Domains Gosec API Path"
+              },
+              "goSecTenant": {
+                "description": "Set the Gosec filter query (tenant) used to invoke Gosec API.",
+                "type": "string",
+                "required": true,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "GOSEC_TENANT",
+                "default": "${tenantId}",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Gosec Parameter Query Tenant"
+              }
+            },
+            "required": []
+          },
+          "identity": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "identity",
+            "title": "Service Identity",
+            "description": "Section to configure identity of service",
+            "properties": {
+              "securityMesosEnable": {
+                "description": "Whether or not enable Mesos security.",
+                "type": "boolean",
+                "required": false,
+                "readOnly": true,
+                "application": false,
+                "level": 2,
+                "internalName": "SECURITY_MESOS_ENABLE",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Enable Mesos Security",
+                "default": true
+              },
+              "mesosPrincipal": {
+                "description": "Mesos principal needed to connect to Mesos.",
+                "type": "string",
+                "required": true,
+                "readOnly": false,
+                "application": true,
+                "level": 1,
+                "internalName": "FRAMEWORK_MESOS_PRINCIPAL",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Mesos principal",
+                "default": "open"
+              },
+              "approlename": {
+                "description": "Role of the app used for dynamic authentication.",
+                "type": "string",
+                "required": true,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "globals.vault.roles",
+                "internalName": "APPROLENAME",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Secret Role",
+                "default": "open"
+              }
+            },
+            "required": []
+          },
+          "calico": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "calico",
+            "title": "Calico Network",
+            "description": "Use Calico security to this maintenance-core instance",
+            "properties": {
+              "networkName": {
+                "description": "Docker user network name",
+                "type": "string",
+                "required": true,
+                "readOnly": false,
+                "ui": {
+                  "updatable": false
+                },
+                "application": true,
+                "globalParameter": "globals.network",
+                "internalName": "NETWORK_NAME",
+                "title": "Network name",
+                "enum": [
+                  "stratio"
+                ]
+              }
+            },
+            "required": []
+          },
+          "resources": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "accordion"
+            },
+            "name": "resources",
+            "title": "Resources",
+            "description": "",
+            "properties": {
+              "CPUs": {
+                "description": "CPUs for the service",
+                "type": "number",
+                "required": true,
+                "readOnly": false,
+                "application": true,
+                "level": 1,
+                "internalName": "CPUs",
+                "title": "CPUs",
+                "default": 0.5
+              },
+              "MEM": {
+                "description": "Memory for the service",
+                "type": "integer",
+                "required": true,
+                "readOnly": false,
+                "application": true,
+                "level": 1,
+                "internalName": "MEM",
+                "title": "Memory (MB)",
+                "default": 1024
+              },
+              "DISK": {
+                "description": "Disk for the service",
+                "type": "integer",
+                "required": true,
+                "readOnly": false,
+                "application": true,
+                "level": 2,
+                "internalName": "DISK",
+                "title": "Disk",
+                "default": 0
+              },
+              "moreresources": {
+                "type": "object",
+                "additionalProperties": false,
+                "ui": {
+                  "component": "show-more"
+                },
+                "name": "moreresources",
+                "title": "",
+                "description": "Section to configure JVM heap size",
+                "properties": {
+                  "datamarketEntityHeapSize": {
+                    "description": "The area of memory used by the JVM for dynamic memory allocation.",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "required": false,
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "HEAP_SIZE",
+                    "title": "Heap size",
+                    "default": "-Xmx3548m"
+                  },
+                  "datamarketEntityHeapMinimumSize": {
+                    "description": "Heap memory reserved by the driver.",
+                    "type": "string",
+                    "maxLength": 100,
+                    "minLength": 3,
+                    "required": false,
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "HEAP_MINIMUM_SIZE",
+                    "title": "Heap minimum size",
+                    "default": "-Xms1024m"
+                  }
+                },
+                "required": []
+              }
+            },
+            "required": []
+          }
+        },
+        "required": []
+      },
+      "placement": {
+        "type": "object",
+        "additionalProperties": false,
+        "ui": null,
+        "name": "placement",
+        "title": "Placements",
+        "description": "In this tab, you can configure constraints to enforce the different artifacts to be placed in specific tagged nodes.",
+        "properties": {
+          "marathonConstraintSection": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "marathonConstraintSection",
+            "title": "Marathon Constraint",
+            "description": "Marathon constraint to apply.",
+            "properties": {
+              "marathonConstraintName": {
+                "description": "Set the name of the given constraint",
+                "type": "string",
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "MARATHON_CONSTRAINT_NAME",
+                "examples": [
+                  "tenant"
+                ],
+                "title": "Constraint name",
+                "default": ""
+              },
+              "marathonConstraintOperator": {
+                "description": "Set operator to run the Marathon constraint",
+                "type": "string",
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "MARATHON_CONSTRAINT_OPERATOR",
+                "examples": [
+                  "CLUSTER"
+                ],
+                "title": "Constraint operator",
+                "default": ""
+              },
+              "marathonConstraintValue": {
+                "description": "Set the value of the constraint",
+                "type": "string",
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "MARATHON_CONSTRAINT_VALUE",
+                "examples": [
+                  "tenant1"
+                ],
+                "title": "Constraint value",
+                "default": ""
+              }
+            },
+            "required": []
+          }
+        },
+        "required": []
+      },
+      "settings": {
+        "type": "object",
+        "additionalProperties": false,
+        "ui": {
+          "component": "standard"
+        },
+        "name": "settings",
+        "title": "Settings",
+        "description": "In this tab you can configure the general configuration of BDL maintenance core Agent.",
+        "properties": {
+          "dmaGlobalSettings": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "accordion"
+            },
+            "name": "GlobalSettings",
+            "title": "Bdl Maintenance Core Global Settings",
+            "description": "Defines global Bdl Maintenance Core configuration values.",
+            "properties": {
+              "datarestDataBase": {
+                "description": "Set the Databases in Datarest. The list of databases discovery in datarest component separated by commas. For example pagila,resoruces",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "DATAREST_CONVENTION_DATA_BASE",
+                "default": "pagila",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "DataRest Databases"
+              },
+              "usePostgRest": {
+                "description": "Set if use postgRest or DataRest Component",
+                "type": "string",
+                "minLength": 1,
+                "required": true,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "internalName": "USE_POSTGREST_COMPONENT",
+                "default": "false",
+                "ui": {
+                  "updatable": true
+                },
+                "title": "Use PostgRest component"
+              }
+            },
+            "required": []
+          },
+          "log": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "accordion"
+            },
+            "name": "log",
+            "title": "Logs",
+            "description": "",
+            "properties": {
+              "rocketLogLevel": {
+                "description": "Log level of the application.",
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 3,
+                "required": false,
+                "readOnly": false,
+                "application": false,
+                "level": 1,
+                "globalParameter": "userland.env.logLevel",
+                "internalName": "MAINTENANCE_CORE_LOG_LEVEL",
+                "title": "Maintenance Core log level",
+                "enum": [
+                  "TRACE",
+                  "DEBUG",
+                  "INFO",
+                  "WARN",
+                  "ERROR",
+                  "FATAL"
+                ],
+                "default": "INFO"
+              }
+            },
+            "required": []
+          }
+        },
+        "required": []
+      },
+      "environment": {
+        "type": "object",
+        "additionalProperties": false,
+        "ui": {
+          "component": "standard"
+        },
+        "name": "environment",
+        "title": "Environment",
+        "description": "",
+        "properties": {
+          "cluster": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": {
+              "component": "standard"
+            },
+            "name": "cluster",
+            "title": "Cluster",
+            "description": "",
+            "properties": {
+              "clusterUrl": {
+                "description": "Cluster URL",
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 3,
+                "required": false,
+                "readOnly": true,
+                "application": false,
+                "level": 1,
+                "globalParameter": "eos.proxyAccessPointURL",
+                "internalName": "CLUSTER_URL",
+                "ui": {
+                  "updatable": false
+                },
+                "title": "Cluster URL"
+              }
+            },
+            "required": []
+          },
+          "vault": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": null,
+            "name": "vault",
+            "title": "Vault",
+            "description": "vault",
+            "properties": {
+              "stringVaultHost": {
+                "description": "Host where the Vault is running on",
+                "type": "string",
+                "readOnly": true,
+                "application": false,
+                "level": 1,
+                "globalParameter": "globals.vault.vaultHost",
+                "internalName": "VAULT_HOST",
+                "title": "Vault host",
+                "default": "${globals.vault.vaultHost}"
+              },
+              "vaultPort": {
+                "description": "Port where the Vault is listening on",
+                "type": "number",
+                "readOnly": true,
+                "application": false,
+                "level": 1,
+                "globalParameter": "globals.vault.vaultPort",
+                "internalName": "VAULT_PORT",
+                "title": "Vault port",
+                "default": 8200
+              }
+            },
+            "required": []
+          }
+        },
+        "required": []
+      }
+    }
+  }
+}
