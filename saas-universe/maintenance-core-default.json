@@ -67,34 +67,34 @@
     "prerequisites": [
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
-        "title": "PostgreSQL Modules dependencies",
+        "title": "PostgreSQL (Modules dependencies)",
         "description": "PostgreSQL stores all the metadata",
         "serviceName": "postgres"
       },
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
-        "title": "PostgreSQL service nameModules dependencies",
-        "description": "PostgreSQL stores all the bdl-master-core data. It is necessary to have a role SERVICE_ID with valid permissions read/write in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "title": "PostgreSQL service name(Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-core data. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
         "serviceName": "postgres",
         "useInstanceName": true
       },
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
-        "title": "PostgreSQL service nameModules dependencies",
-        "description": "PostgreSQL stores all the bdl-master-coremetadata. It is necessary to have a role SERVICE_ID with valid permissions read/write in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "title": "PostgreSQL service name(Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-coremetadata. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master-core in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
         "serviceName": "postgres",
         "useInstanceName": true,
         "usePathNotation": true
       },
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteDiscovery",
-        "title": "Pgbouncer Modules dependencies",
-        "description": "PostgreSQL stores all the bdl-master-core metadata. It is necessary to have a role SERVICE_ID with valid permissions read/write in PostgreSQL before deploying bdl-master in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
+        "title": "Pgbouncer (Modules dependencies)",
+        "description": "PostgreSQL stores all the bdl-master-core metadata. It is necessary to have a role SERVICE_ID with valid permissions (read/write) in PostgreSQL before deploying bdl-master in order to create the tenant schema. Steps to create a valid role are: 'create user <tenantName>, grant all privileges on database <database> to <tenantName>'",
         "serviceName": "pgbouncer"
       },
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
-        "title": "Create database in postgres Modules dependencies",
+        "title": "Create database in postgres (Modules dependencies)",
         "description": "Creates database in postgres.",
         "expect": [
           200,
@@ -109,7 +109,7 @@
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
         "title": "Creates user in Gosec",
-        "description": "Creates user needed in the ACL's related to the service being deployed if the is user already in LDAP this is not required",
+        "description": "Creates user needed in the ACL's related to the service being deployed (if the is user already in LDAP this is not required)",
         "expect": [
           201,
           409
@@ -131,7 +131,7 @@
       {
         "typeClass": "com.stratio.tais.persistence.model.service.prerequisites.PrerequisiteRest",
         "title": "Create Postgres policy in Gosec",
-        "description": "Create group for ACLS for the service being deployed is user already in LDAP this is not required",
+        "description": "Create group for ACLS for the service being deployed (is user already in LDAP this is not required)",
         "expect": [
           201,
           409
@@ -267,7 +267,7 @@
             "type": "string",
             "required": true,
             "readOnly": false,
-            "pattern": "^[^/][a-z0-9-]+$",
+            "pattern": "(^[^/][a-z0-9-]+)$",
             "application": false,
             "internalName": "SERVICE_NAME",
             "ui": {
@@ -281,7 +281,7 @@
             "type": "string",
             "required": false,
             "readOnly": true,
-            "pattern": "^[a-z0-9]+$",
+            "pattern": "(^[a-z0-9]+)$",
             "application": false,
             "level": 2,
             "internalName": "EOS_TENANT",
@@ -312,7 +312,7 @@
             "ui": {
               "updatable": false
             },
-            "title": "Service identity usually same as service name",
+            "title": "Service identity (usually same as service name)",
             "default": "${eosTenantId}-${maintenanceCoreServiceName}"
           },
           "postgresql": {
@@ -570,7 +570,7 @@
                 "title": "Policies Domains Gosec API Path"
               },
               "goSecTenant": {
-                "description": "Set the Gosec filter query tenant used to invoke Gosec API.",
+                "description": "Set the Gosec filter query (tenant) used to invoke Gosec API.",
                 "type": "string",
                 "required": true,
                 "readOnly": false,
@@ -700,7 +700,7 @@
                 "application": true,
                 "level": 1,
                 "internalName": "MEM",
-                "title": "Memory MB",
+                "title": "Memory (MB)",
                 "default": 1024
               },
               "DISK": {
