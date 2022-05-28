@@ -34,7 +34,6 @@
             "postgresDatabase": "master",
             "postgresHost": "s000004-postgres-prueba.s000004",
             "postgresName": "s000004-postgres-prueba.s000004",
-            "postgresPgHost": "s000004-postgres-prueba.s000004",
             "postgresSchema": "mantenimiento_maestros",
             "postgresServiceId": "/s000004/s000004-postgres-prueba"
         },

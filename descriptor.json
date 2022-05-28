@@ -6,6 +6,7 @@
             "executePostgresPrerequisites": false,
             "availablePgBouncer": false,
             "postgresHost": "s000004-postgres-prueba.s000004",
+            "postgresPgHost": "s000004-postgres-prueba.s000004",
             "postgresName": "s000004-postgres-prueba.s000004",
             "postgresServiceId": "/s000004/s000004-postgres-prueba",
             "postgresDatabase": "master",
