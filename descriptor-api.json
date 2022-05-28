@@ -13,7 +13,7 @@
             },
             "CrossdataCatalogSettings": {
                 "catalogType": "Zookeeper",
-                "bdlCatalogsDefinitionMode": true,
+                "bdlCatalogsDefinitionMode": false,
                 "zookeeperName": "s000001-zk-userland.s000001",
                 "zookeeperNamePath": "/s000001/s000001-zk-userland",
                 "zookeeperChroot": "",
