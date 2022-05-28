@@ -28,7 +28,7 @@ node('cloner'){
 
 def DEV = {
     // sh("echo $DEPLOYMENTDESCRIPTOR")
-    params = [url: 'https://mi-url.com', tenant: 's000004', model: 'basic', version: '11.0.1', service: 'grafana-eos', serviceDescriptorPath: 'mipath']
+    params = [url: 'https://mi-url.com', tenant: 's000004', model: 'basic', version: '11.0.1', service: 'grafana-eos']
     doCD(params)
 
 }
