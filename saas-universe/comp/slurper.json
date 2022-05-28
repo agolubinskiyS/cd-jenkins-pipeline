@@ -1,111 +1,67 @@
 {
     "environment": {
-        "kerberos": {
-            "bdlKerberosRenewalInterval": "4h"
+        "cluster": {
+            "clusterUrl": "https://bootstrap.yankee.labs.stratio.com"
         },
         "vault": {
-            "vaultHost": "vault.service.eos.yankee.labs.stratio.com",
-            "vaultPath": "userland",
+            "stringVaultHost": "vault.service.eos.yankee.labs.stratio.com",
             "vaultPort": 8200
         }
     },
     "general": {
-        "appname": "eureka",
         "calico": {
-            "networkName": "s000001-core"
+            "networkName": "s000004-core"
         },
-        "executePrerequisites": true,
-        "executePrerequisitesZkPolicy": true,
-        "externalConfiguration": {
-            "CrossdataCatalogSettings": {
-                "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
-                "bdlCatalogsDefinitionMode": false,
-                "catalogType": "Zookeeper",
-                "zookeeperChroot": "",
-                "zookeeperName": "s000001-zk-userland.s000001"
-            },
-            "governanceSettings": {
-                "bdlAgentCollectionName": "*",
-                "bdlGovernanceBaseUri": "https://dg-businessglossary-api.governance.marathon.mesos:60000/dictionary",
-                "bdlGovernanceBpmEnabled": true
-            }
+        "datarest": {
+            "datarestURL": "https://s000001-dg-datarest-truco-internal.s000001.marathon.mesos:8000"
+        },
+        "gosec": {
+            "goSecTenant": "s000004",
+            "gosecURL": "https://gosec-services-daas.marathon.mesos:8443",
+            "policiesDomainsPath": "/policies/domains"
         },
         "identity": {
-            "approlename": "s000001",
+            "approlename": "s000004",
             "mesosPrincipal": "open"
         },
-        "resources": {
-            "CPUs": 2,
-            "DISK": 0,
-            "INSTANCES": 1,
-            "MEM": 2048
+        "maintenanceCoreServiceName": "bdl-masters-core-prueba",
+        "postRest": {
+            "postrestURL": "http://s000001-postgrest.s000001.marathon.mesos:3000"
         },
-        "serviceId": "/s000001/s000001-eureka",
-        "tenantName": "s000001-eureka"
+        "postgresql": {
+            "availablePgBouncer": false,
+            "executePostgresPrerequisites": false,
+            "postgresDatabase": "master",
+            "postgresHost": "s000004-postgres-prueba.s000004",
+            "postgresName": "s000004-postgres-prueba.s000004",
+            "postgresPgHost": "s000004-postgres-prueba.s000004",
+            "postgresSchema": "mantenimiento_maestros",
+            "postgresServiceId": "/s000004/s000004-postgres-prueba"
+        },
+        "resources": {
+            "CPUs": 0.5,
+            "MEM": 1024,
+            "moreresources": {
+                "datamarketEntityHeapMinimumSize": "-Xms1024m",
+                "datamarketEntityHeapSize": "-Xmx3548m"
+            }
+        },
+        "serviceId": "/s000004/s000004-bdl-masters-core-prueba"
     },
-    "placements": {
-        "marathonConstraint": {
-            "constraintName": "",
-            "constraintOperator": "",
-            "constraintValue": ""
+    "placement": {
+        "marathonConstraintSection": {
+            "marathonConstraintName": "",
+            "marathonConstraintOperator": "",
+            "marathonConstraintValue": ""
         }
     },
     "settings": {
-        "bdlAgentAdditionalJars": "",
-        "bdlAgentOptimizerMode": true,
-        "bdlAgentPublisherMode": true,
-        "healthcheck": {
-            "adaptiveAsyncHealthCheck": {
-                "adaptiveAsyncHealthCheckDelayFactor": "2.0",
-                "adaptiveAsyncHealthCheckInitialDelay": "15 seconds",
-                "adaptiveAsyncHealthCheckMaxDelay": "1 hour",
-                "adaptiveAsyncHealthCheckMinDelay": "5 seconds"
-            },
-            "asyncHealthCheck": {
-                "asyncHealthCheckInterval": "30 seconds"
-            },
-            "healthCheckEnabled": true
+        "dmaGlobalSettings": {
+            "datarestDataBase": "pagila",
+            "usePostgRest": "false"
         },
-        "logging": {
-            "bdlLogLevel": "INFO",
-            "bdlLoggingType": "CentralizedJSON"
-        },
-        "optimizerSettings": {
-            "bdlAgentJdbcOptimizerFallbackToDialects": true,
-            "bdlAgentJdbcOptimizerForceForcedPartitionColumn": true,
-            "bdlAgentJdbcOptimizerInitialSize": 10000,
-            "bdlAgentJdbcOptimizerMemorySize": "192m",
-            "optimizerCronSettings": {
-                "bdlAgentJdbcOptimizationCronPeriod": "5 minutes",
-                "bdlAgentJdbcOptimizationForcedCronEnabled": true,
-                "bdlAgentJdbcOptimizationForcedCronPeriod": "* * 0 ? * MON-FRI",
-                "bdlAgentJdbcOptimizationForcedCronRetryAttempts": 15
-            }
-        },
-        "prometheusMetrics": {
-            "bdlMetricsPrometheusEnabled": true,
-            "bdlMetricsPrometheusPath": "metrics"
-        },
-        "publisherSettings": {
-            "bdlAgentCollectionBlacklist": "",
-            "bdlGovernanceCompatibleSemanticCollection": true,
-            "bdlGovernanceOntologyCreateAbstractConcepts": false,
-            "bdlGovernanceOntologyCreateOperationalViews": true,
-            "bdlGovernanceOntologyCreateSecuredOperationalViews": true,
-            "bdlGovernanceOntologyUseOperationalExtensionsWithSchema": false,
-            "publisherCronSettings": {
-                "bdlAgentCronPeriod": "15 seconds",
-                "bdlAgentForcedCronEnabled": true,
-                "bdlAgentForcedCronPeriod": "2 hours",
-                "bdlAgentForcedCronRetryAttempts": 15
-            }
-        },
-        "zookeeper": {
-            "bdlCoreCatalogZookeeperConnectionTimeout": "15s",
-            "bdlCoreCatalogZookeeperRetryAttempts": 3,
-            "bdlCoreCatalogZookeeperRetryInterval": "10s",
-            "bdlCoreCatalogZookeeperSessionTimeout": "60s",
-            "prerequisitesZkPath": ""
+        "log": {
+            "rocketLogLevel": "INFO"
         }
     }
 }

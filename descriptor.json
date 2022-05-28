@@ -1,0 +1,66 @@
+{
+    "general": {
+        "maintenanceCoreServiceName": "bdl-masters-core-prueba",
+        "serviceId": "/s000004/s000004-bdl-masters-core-prueba",
+        "postgresql": {
+            "executePostgresPrerequisites": false,
+            "availablePgBouncer": false,
+            "postgresHost": "s000004-postgres-prueba.s000004",
+            "postgresName": "s000004-postgres-prueba.s000004",
+            "postgresServiceId": "/s000004/s000004-postgres-prueba",
+            "postgresDatabase": "master",
+            "postgresSchema": "mantenimiento_maestros"
+        },
+        "datarest": {
+            "datarestURL": "https://s000001-dg-datarest-truco-internal.s000001.marathon.mesos:8000"
+        },
+        "postRest": {
+            "postrestURL": "http://s000001-postgrest.s000001.marathon.mesos:3000"
+        },
+        "gosec": {
+            "gosecURL": "https://gosec-services-daas.marathon.mesos:8443",
+            "policiesDomainsPath": "/policies/domains",
+            "goSecTenant": "s000004"
+        },
+        "identity": {
+            "mesosPrincipal": "open",
+            "approlename": "s000004"
+        },
+        "calico": {
+            "networkName": "s000004-core"
+        },
+        "resources": {
+            "CPUs": 0.5,
+            "MEM": 1024,
+            "moreresources": {
+                "datamarketEntityHeapSize": "-Xmx3548m",
+                "datamarketEntityHeapMinimumSize": "-Xms1024m"
+            }
+        }
+    },
+    "placement": {
+        "marathonConstraintSection": {
+            "marathonConstraintName": "",
+            "marathonConstraintOperator": "",
+            "marathonConstraintValue": ""
+        }
+    },
+    "settings": {
+        "dmaGlobalSettings": {
+            "datarestDataBase": "pagila",
+            "usePostgRest": "false"
+        },
+        "log": {
+            "rocketLogLevel": "INFO"
+        }
+    },
+    "environment": {
+        "cluster": {
+            "clusterUrl": "https://bootstrap.yankee.labs.stratio.com"
+        },
+        "vault": {
+            "stringVaultHost": "vault.service.eos.yankee.labs.stratio.com",
+            "vaultPort": 8200
+        }
+    }
+}
