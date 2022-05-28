@@ -1,0 +1,112 @@
+{
+    "environment": {
+        "kerberos": {
+            "bdlKerberosRenewalInterval": "4h"
+        },
+        "vault": {
+            "vaultHost": "vault.service.eos.yankee.labs.stratio.com",
+            "vaultPath": "userland",
+            "vaultPort": 8200
+        }
+    },
+    "general": {
+        "appname": "eureka",
+        "calico": {
+            "networkName": "s000001-core"
+        },
+        "executePrerequisites": true,
+        "executePrerequisitesZkPolicy": true,
+        "externalConfiguration": {
+            "CrossdataCatalogSettings": {
+                "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
+                "bdlCatalogsDefinitionMode": false,
+                "catalogType": "Zookeeper",
+                "zookeeperChroot": "",
+                "zookeeperName": "s000001-zk-userland.s000001",
+                "zookeeperNamePath": "/s000001/s000001-zk-userland"
+            },
+            "governanceSettings": {
+                "bdlAgentCollectionName": "*",
+                "bdlGovernanceBaseUri": "https://dg-businessglossary-api.governance.marathon.mesos:60000/dictionary",
+                "bdlGovernanceBpmEnabled": true
+            }
+        },
+        "identity": {
+            "approlename": "s000001",
+            "mesosPrincipal": "open"
+        },
+        "resources": {
+            "CPUs": 2,
+            "DISK": 0,
+            "INSTANCES": 1,
+            "MEM": 2048
+        },
+        "serviceId": "/s000001/s000001-eureka",
+        "tenantName": "s000001-eureka"
+    },
+    "placements": {
+        "marathonConstraint": {
+            "constraintName": "",
+            "constraintOperator": "",
+            "constraintValue": ""
+        }
+    },
+    "settings": {
+        "bdlAgentAdditionalJars": "",
+        "bdlAgentOptimizerMode": true,
+        "bdlAgentPublisherMode": true,
+        "healthcheck": {
+            "adaptiveAsyncHealthCheck": {
+                "adaptiveAsyncHealthCheckDelayFactor": "2.0",
+                "adaptiveAsyncHealthCheckInitialDelay": "15 seconds",
+                "adaptiveAsyncHealthCheckMaxDelay": "1 hour",
+                "adaptiveAsyncHealthCheckMinDelay": "5 seconds"
+            },
+            "asyncHealthCheck": {
+                "asyncHealthCheckInterval": "30 seconds"
+            },
+            "healthCheckEnabled": true
+        },
+        "logging": {
+            "bdlLogLevel": "INFO",
+            "bdlLoggingType": "CentralizedJSON"
+        },
+        "optimizerSettings": {
+            "bdlAgentJdbcOptimizerFallbackToDialects": true,
+            "bdlAgentJdbcOptimizerForceForcedPartitionColumn": true,
+            "bdlAgentJdbcOptimizerInitialSize": 10000,
+            "bdlAgentJdbcOptimizerMemorySize": "192m",
+            "optimizerCronSettings": {
+                "bdlAgentJdbcOptimizationCronPeriod": "5 minutes",
+                "bdlAgentJdbcOptimizationForcedCronEnabled": true,
+                "bdlAgentJdbcOptimizationForcedCronPeriod": "* * 0 ? * MON-FRI",
+                "bdlAgentJdbcOptimizationForcedCronRetryAttempts": 15
+            }
+        },
+        "prometheusMetrics": {
+            "bdlMetricsPrometheusEnabled": true,
+            "bdlMetricsPrometheusPath": "metrics"
+        },
+        "publisherSettings": {
+            "bdlAgentCollectionBlacklist": "",
+            "bdlGovernanceCompatibleSemanticCollection": true,
+            "bdlGovernanceOntologyCreateAbstractConcepts": false,
+            "bdlGovernanceOntologyCreateOperationalViews": true,
+            "bdlGovernanceOntologyCreateSecuredOperationalViews": true,
+            "bdlGovernanceOntologyUseOperationalExtensionsWithSchema": false,
+            "publisherCronSettings": {
+                "bdlAgentCronPeriod": "15 seconds",
+                "bdlAgentForcedCronEnabled": true,
+                "bdlAgentForcedCronPeriod": "2 hours",
+                "bdlAgentForcedCronRetryAttempts": 15
+            }
+        },
+        "zookeeper": {
+            "bdlCoreCatalogZookeeperConnectionTimeout": "15s",
+            "bdlCoreCatalogZookeeperRetryAttempts": 3,
+            "bdlCoreCatalogZookeeperRetryInterval": "10s",
+            "bdlCoreCatalogZookeeperSessionTimeout": "60s",
+            "prerequisitesZkPath": ""
+        }
+    }
+}

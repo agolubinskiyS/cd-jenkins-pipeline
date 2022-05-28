@@ -221,7 +221,7 @@
                                     "internalName": "PREREQUISITES_ZK_NAME",
                                     "ui": {
                                         "visible": {
-                                            "bdlCatalogsDefinitionMode": false
+                                            "bdlCatalogsDefinitionMode": true
                                         },
                                         "updatable": false
                                     },

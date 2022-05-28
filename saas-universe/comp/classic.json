@@ -1,0 +1,112 @@
+{
+    "general": {
+        "executePrerequisites": true,
+        "tenantName": "s000001-eureka",
+        "appname": "eureka",
+        "identity": {
+            "approlename": "s000001",
+            "mesosPrincipal": "open"
+        },
+        "executePrerequisitesZkPolicy": true,
+        "resources": {
+            "CPUs": 2,
+            "MEM": 2048,
+            "INSTANCES": 1,
+            "DISK": 0
+        },
+        "externalConfiguration": {
+            "CrossdataCatalogSettings": {
+                "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
+                "zookeeperNamePath": "/s000001/s000001-zk-userland",
+                "zookeeperChroot": "",
+                "catalogType": "Zookeeper",
+                "bdlCatalogsDefinitionMode": false,
+                "zookeeperName": "s000001-zk-userland.s000001"
+            },
+            "governanceSettings": {
+                "bdlGovernanceBpmEnabled": true,
+                "bdlAgentCollectionName": "*",
+                "bdlGovernanceBaseUri": "https://dg-businessglossary-api.governance.marathon.mesos:60000/dictionary"
+            }
+        },
+        "serviceId": "/s000001/s000001-eureka",
+        "calico": {
+            "networkName": "s000001-core"
+        }
+    },
+    "settings": {
+        "publisherSettings": {
+            "bdlAgentCollectionBlacklist": "",
+            "bdlGovernanceOntologyCreateOperationalViews": true,
+            "publisherCronSettings": {
+                "bdlAgentForcedCronPeriod": "2 hours",
+                "bdlAgentForcedCronEnabled": true,
+                "bdlAgentForcedCronRetryAttempts": 15,
+                "bdlAgentCronPeriod": "15 seconds"
+            },
+            "bdlGovernanceOntologyCreateAbstractConcepts": false,
+            "bdlGovernanceOntologyUseOperationalExtensionsWithSchema": false,
+            "bdlGovernanceCompatibleSemanticCollection": true,
+            "bdlGovernanceOntologyCreateSecuredOperationalViews": true
+        },
+        "prometheusMetrics": {
+            "bdlMetricsPrometheusEnabled": true,
+            "bdlMetricsPrometheusPath": "metrics"
+        },
+        "healthcheck": {
+            "healthCheckEnabled": true,
+            "adaptiveAsyncHealthCheck": {
+                "adaptiveAsyncHealthCheckMaxDelay": "1 hour",
+                "adaptiveAsyncHealthCheckMinDelay": "5 seconds",
+                "adaptiveAsyncHealthCheckDelayFactor": "2.0",
+                "adaptiveAsyncHealthCheckInitialDelay": "15 seconds"
+            },
+            "asyncHealthCheck": {
+                "asyncHealthCheckInterval": "30 seconds"
+            }
+        },
+        "zookeeper": {
+            "bdlCoreCatalogZookeeperRetryAttempts": 3,
+            "bdlCoreCatalogZookeeperRetryInterval": "10s",
+            "prerequisitesZkPath": "",
+            "bdlCoreCatalogZookeeperSessionTimeout": "60s",
+            "bdlCoreCatalogZookeeperConnectionTimeout": "15s"
+        },
+        "bdlAgentAdditionalJars": "",
+        "optimizerSettings": {
+            "bdlAgentJdbcOptimizerInitialSize": 10000,
+            "bdlAgentJdbcOptimizerForceForcedPartitionColumn": true,
+            "bdlAgentJdbcOptimizerMemorySize": "192m",
+            "optimizerCronSettings": {
+                "bdlAgentJdbcOptimizationCronPeriod": "5 minutes",
+                "bdlAgentJdbcOptimizationForcedCronRetryAttempts": 15,
+                "bdlAgentJdbcOptimizationForcedCronPeriod": "* * 0 ? * MON-FRI",
+                "bdlAgentJdbcOptimizationForcedCronEnabled": true
+            },
+            "bdlAgentJdbcOptimizerFallbackToDialects": true
+        },
+        "bdlAgentPublisherMode": true,
+        "logging": {
+            "bdlLogLevel": "INFO",
+            "bdlLoggingType": "CentralizedJSON"
+        },
+        "bdlAgentOptimizerMode": true
+    },
+    "environment": {
+        "kerberos": {
+            "bdlKerberosRenewalInterval": "4h"
+        },
+        "vault": {
+            "vaultPort": 8200,
+            "vaultHost": "vault.service.eos.yankee.labs.stratio.com",
+            "vaultPath": "userland"
+        }
+    },
+    "placements": {
+        "marathonConstraint": {
+            "constraintValue": "",
+            "constraintName": "",
+            "constraintOperator": ""
+        }
+    }
+}
