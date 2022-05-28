@@ -1,0 +1,1134 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "general": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": null,
+            "name": "general",
+            "title": "General",
+            "description": "General",
+            "properties": {
+                "serviceId": {
+                    "description": "Service ID",
+                    "type": "string",
+                    "required": true,
+                    "readOnly": true,
+                    "application": true,
+                    "level": 1,
+                    "internalName": "SERVICE_ID",
+                    "ui": {
+                        "updatable": false
+                    },
+                    "title": "Service ID",
+                    "default": "/${tenantId}/${tenantId}-${appname}"
+                },
+                "tenantName": {
+                    "type": "string",
+                    "required": false,
+                    "readOnly": true,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "TENANT_NAME",
+                    "ui": {
+                        "updatable": false
+                    },
+                    "title": "Service user",
+                    "default": "${tenantId}-${appname}"
+                },
+                "appname": {
+                    "type": "string",
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "APPNAME",
+                    "ui": {
+                        "updatable": false
+                    },
+                    "title": "Service Identity",
+                    "default": "eureka-agent"
+                },
+                "executePrerequisites": {
+                    "description": "Whether to execute prerequisites automatically for this BDL Agent instance.",
+                    "type": "boolean",
+                    "required": true,
+                    "readOnly": false,
+                    "application": true,
+                    "level": 1,
+                    "internalName": "PREREQUISITES",
+                    "ui": {
+                        "updatable": false
+                    },
+                    "title": "Execute prerequisites",
+                    "default": false
+                },
+                "executePrerequisitesZkPolicy": {
+                    "description": "Create Zookeeper policy automatically for this BDL Agent instance.",
+                    "type": "boolean",
+                    "required": false,
+                    "readOnly": false,
+                    "application": true,
+                    "level": 1,
+                    "internalName": "PREREQUISITES_ZK_POLICY",
+                    "ui": {
+                        "visible": {
+                            "executePrerequisites": true
+                        },
+                        "updatable": false
+                    },
+                    "title": "Create zookeeper policy",
+                    "default": false
+                },
+                "externalConfiguration": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "standard"
+                    },
+                    "name": "externalConfiguration",
+                    "title": "External configuration",
+                    "description": "Find here some configuration options for the external resources.",
+                    "properties": {
+                        "governanceSettings": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "standard"
+                            },
+                            "name": "governanceSettings",
+                            "title": "Governance settings",
+                            "description": "",
+                            "properties": {
+                                "bdlAgentCollectionName": {
+                                    "type": "string",
+                                    "required": true,
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_COLLECTION_NAMES_WITHOUT_LIST_ENCLOSURE",
+                                    "examples": [
+                                        "collection1, collection2",
+                                        "*",
+                                        "coll*",
+                                        "*tion"
+                                    ],
+                                    "title": "Monitored collections",
+                                    "default": "*"
+                                },
+                                "bdlGovernanceBaseUri": {
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_GOVERNANCE_BASE_URI",
+                                    "title": "Governance API URI",
+                                    "default": "https://dg-businessglossary-api.governance.marathon.mesos:60000/dictionary"
+                                },
+                                "bdlGovernanceBpmEnabled": {
+                                    "type": "boolean",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_GOVERNANCE_BPM_ENABLED",
+                                    "title": "Enable semantic layer's BPM integration?",
+                                    "default": true
+                                }
+                            },
+                            "required": [
+                                "bdlAgentCollectionName"
+                            ]
+                        },
+                        "CrossdataCatalogSettings": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "standard"
+                            },
+                            "name": "CrossdataCatalogSettings",
+                            "title": "Crossdata settings",
+                            "description": "",
+                            "properties": {
+                                "catalogType": {
+                                    "description": "CatalogType",
+                                    "type": "string",
+                                    "required": true,
+                                    "readOnly": true,
+                                    "application": false,
+                                    "level": 1,
+                                    "globalParameter": "",
+                                    "internalName": "BDL_CATALOGS_BASIC_DEFINITION_TYPE",
+                                    "ui": {
+                                        "updatable": false
+                                    },
+                                    "title": "Type",
+                                    "default": "Zookeeper"
+                                },
+                                "bdlCatalogsDefinitionMode": {
+                                    "type": "boolean",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_CATALOGS_DEFINITION_MODE",
+                                    "title": "Advanced Catalog configuration?",
+                                    "default": false
+                                },
+                                "zookeeperName": {
+                                    "type": "string",
+                                    "maxLength": 256,
+                                    "minLength": 3,
+                                    "required": false,
+                                    "readOnly": false,
+                                    "application": true,
+                                    "level": 1,
+                                    "globalParameter": "prerequisites.0",
+                                    "internalName": "BDL_CATALOGS_BASIC_DEFINITION_ZOOKEEPER_NAME",
+                                    "ui": {
+                                        "visible": {
+                                            "bdlCatalogsDefinitionMode": false
+                                        }
+                                    },
+                                    "title": "Informational Metadata Catalog (Zookeeper Name)",
+                                    "enum": [
+                                        "s000003-zk-userland.s000003",
+                                        "s000002-zkuserland.s000002",
+                                        "s000001-zk-userland.s000001"
+                                    ]
+                                },
+                                "executePrerequisitesChRoot": {
+                                    "description": "Whether to execute prerequisites automatically for this BDL Agent instance setting ACLs in the chroot configured.",
+                                    "type": "boolean",
+                                    "required": false,
+                                    "readOnly": false,
+                                    "application": true,
+                                    "internalName": "PREREQUISITES_CHROOT",
+                                    "ui": {
+                                        "visible": {
+                                            "executePrerequisitesZkPolicy": true
+                                        },
+                                        "updatable": false
+                                    },
+                                    "title": "Create chroot policy (select only if 'Chroot to apply to Zookeeper connection' is filled)",
+                                    "default": false
+                                },
+                                "zookeeperNamePath": {
+                                    "type": "string",
+                                    "required": false,
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "globalParameter": "prerequisites.1",
+                                    "internalName": "PREREQUISITES_ZK_NAME",
+                                    "ui": {
+                                        "visible": {
+                                            "bdlCatalogsDefinitionMode": false
+                                        },
+                                        "updatable": false
+                                    },
+                                    "title": "Zookeeper Name",
+                                    "enum": [
+                                        "/s000003/s000003-zk-userland",
+                                        "/s000002/s000002-zkuserland",
+                                        "/s000001/s000001-zk-userland"
+                                    ]
+                                },
+                                "zookeeperChroot": {
+                                    "description": "Chroot to apply to Zookeeper connection. In case of using a prefix, there are additional permissions resources to add: \n Ex1: If Zookeeper Chroot: /catalog , the following read resource should be added to Gosec (additionaly to the automatically created resources): \n /catalog \nEx2: If Zookeeper Chroot: /catalog/mypath, the following read resources should be added to Gosec (additionaly to the automatically created resources): \n /catalog\n /catalog/mypath",
+                                    "type": "string",
+                                    "required": false,
+                                    "readOnly": false,
+                                    "pattern": "^(/[a-zA-Z0-9._-]+)*$",
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "PREREQUISITES_ZK_CHROOT",
+                                    "examples": [
+                                        "",
+                                        "/chroot",
+                                        "/complex/chroot/example"
+                                    ],
+                                    "ui": {
+                                        "visible": {
+                                            "bdlCatalogsDefinitionMode": false
+                                        },
+                                        "updatable": false
+                                    },
+                                    "title": "Zookeeper Chroot (NOTE: If you are using this param, you need to configure additional permissions, check help)",
+                                    "default": ""
+                                },
+                                "bdlCatalogsBasicDefinitionPrefixes": {
+                                    "type": "string",
+                                    "required": false,
+                                    "readOnly": false,
+                                    "pattern": ".+",
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_CATALOGS_BASIC_DEFINITION_PREFIXES_WITHOUT_LIST_ENCLOSURE",
+                                    "examples": [
+                                        "catalog1, catalog2"
+                                    ],
+                                    "ui": {
+                                        "visible": {
+                                            "bdlCatalogsDefinitionMode": false
+                                        }
+                                    },
+                                    "title": "BDL Crossdata catalog names (comma-separated list of names)",
+                                    "default": "xdcatalog"
+                                },
+                                "bdlCatalogsAdvancedDefinition": {
+                                    "type": "string",
+                                    "maxLength": 10000,
+                                    "minLength": 1,
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_CATALOGS_ADVANCED_DEFINITION",
+                                    "examples": [
+                                        "\\[\\{ class = \"org.apache.spark.sql.crossdata.catalyst.catalog.persistent.zookeeper.ZookeeperCatalog\", prefix = \"xdcatalog\", zookeeper.connectionString = \"zk-0001.s000001-zk1.s000001.mesos:2181,zk-0002.s000001-zk1.s000001.mesos:2181,zk-0003.s000001-zk1.s000001.mesos:2181\" \\}, \\{ class = \"org.apache.spark.sql.crossdata.catalyst.catalog.persistent.zookeeper.ZookeeperCatalog\", prefix = \"bdlcatalog\", zookeeper.connectionString = \"zk-0001.s000001-zk1.s000001.mesos:2181,zk-0002.s000001-zk1.s000001.mesos:2181,zk-0003.s000001-zk1.s000001.mesos:2181\" \\}\\]"
+                                    ],
+                                    "ui": {
+                                        "visible": {
+                                            "bdlCatalogsDefinitionMode": true
+                                        }
+                                    },
+                                    "title": "BDL Crossdata catalogs definition",
+                                    "default": ""
+                                }
+                            },
+                            "required": [
+                                "catalogType"
+                            ]
+                        }
+                    },
+                    "required": []
+                },
+                "identity": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": null,
+                    "name": "identity",
+                    "title": "Service identity",
+                    "description": "identity",
+                    "properties": {
+                        "mesosPrincipal": {
+                            "type": "string",
+                            "required": true,
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "MESOS_PRINCIPAL",
+                            "title": "Mesos principal",
+                            "default": "open"
+                        },
+                        "approlename": {
+                            "description": "App role used to recover a Vault token with a pre-defined policy",
+                            "type": "string",
+                            "required": true,
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "globalParameter": "globals.vault.roles",
+                            "internalName": "APPROLENAME",
+                            "title": "Vault role",
+                            "enum": [
+                                "open",
+                                "prometheus",
+                                "s000001",
+                                "s000001-dg-agent",
+                                "s000002",
+                                "s000002-dg-agent",
+                                "s000003",
+                                "s000003-dg-agent",
+                                "s000004",
+                                "s000004-dg-agent",
+                                "tais"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "mesosPrincipal",
+                        "approlename"
+                    ]
+                },
+                "calico": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "standard"
+                    },
+                    "name": "calico",
+                    "title": "Calico Network",
+                    "description": "Set the calico network where BDL Agent will be deployed.",
+                    "properties": {
+                        "networkName": {
+                            "description": "Docker user network name",
+                            "type": "string",
+                            "required": true,
+                            "readOnly": false,
+                            "application": true,
+                            "globalParameter": "globals.network",
+                            "internalName": "NETWORK_NAME",
+                            "title": "Network name",
+                            "enum": [
+                                "logs",
+                                "metrics",
+                                "s000001-core",
+                                "s000001-user",
+                                "s000002-core",
+                                "s000002-user",
+                                "s000003-core",
+                                "s000003-user",
+                                "s000004",
+                                "s000004-core",
+                                "s000004-user",
+                                "stratio",
+                                "stratio-public",
+                                "stratio-shared"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "networkName"
+                    ]
+                },
+                "resources": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion"
+                    },
+                    "name": "resources",
+                    "title": "Resources",
+                    "description": "Set the resources where agent will be deployed.",
+                    "properties": {
+                        "INSTANCES": {
+                            "description": "Instances for the service",
+                            "type": "number",
+                            "required": true,
+                            "readOnly": false,
+                            "application": true,
+                            "level": 1,
+                            "internalName": "INSTANCES",
+                            "title": "Instances for the service",
+                            "default": 1
+                        },
+                        "CPUs": {
+                            "description": "CPUs for the service",
+                            "type": "number",
+                            "required": true,
+                            "readOnly": false,
+                            "application": true,
+                            "level": 1,
+                            "internalName": "CPUs",
+                            "title": "CPUs for the service",
+                            "default": 2
+                        },
+                        "MEM": {
+                            "description": "Memory for the service",
+                            "type": "number",
+                            "required": true,
+                            "readOnly": false,
+                            "application": true,
+                            "level": 1,
+                            "internalName": "MEM",
+                            "title": "Memory for the service",
+                            "default": 2048
+                        },
+                        "DISK": {
+                            "description": "Disk for the service",
+                            "type": "number",
+                            "required": true,
+                            "readOnly": false,
+                            "application": true,
+                            "level": 1,
+                            "internalName": "DISK",
+                            "title": "Disk for the service",
+                            "default": 0
+                        }
+                    },
+                    "required": [
+                        "INSTANCES",
+                        "CPUs",
+                        "MEM",
+                        "DISK"
+                    ]
+                }
+            },
+            "required": [
+                "serviceId",
+                "executePrerequisites"
+            ]
+        },
+        "settings": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": null,
+            "name": "settings",
+            "title": "Settings",
+            "description": "settings",
+            "properties": {
+                "bdlAgentPublisherMode": {
+                    "description": "Publisher mode makes the agent to publish collection layers (technical and semantic). If disabled, it will not monitor collections and will not publish them.",
+                    "type": "boolean",
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "BDL_AGENT_ENABLED",
+                    "title": "Enable publisher mode?",
+                    "default": true
+                },
+                "bdlAgentOptimizerMode": {
+                    "description": "Optimizer mode makes the agent to optimize JDBC tables registered at Stratio Governance, finding out their best partition column to optimize Spark access to them.",
+                    "type": "boolean",
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "BDL_AGENT_JDBC_OPTIMIZER_ENABLED",
+                    "title": "Enable optimizer mode?",
+                    "default": true
+                },
+                "bdlAgentAdditionalJars": {
+                    "description": "Comma-separated list of files (usually driver jars) needed by BDL Agent. They will be fetched during agent's start-up.",
+                    "type": "string",
+                    "required": false,
+                    "readOnly": false,
+                    "application": false,
+                    "level": 1,
+                    "internalName": "BDL_AGENT_ADDITIONAL_JARS",
+                    "examples": [
+                        "http://localhost:1234/myDependency1.jar,http://localhost:1234/myDependency2.jar"
+                    ],
+                    "title": "Additional jars",
+                    "default": ""
+                },
+                "publisherSettings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion",
+                        "visible": {
+                            "bdlAgentPublisherMode": true
+                        }
+                    },
+                    "name": "publisherSettings",
+                    "title": "Publisher settings",
+                    "description": "Publisher configuration settings",
+                    "properties": {
+                        "bdlAgentCollectionBlacklist": {
+                            "description": "Matching collections will not be monitored",
+                            "type": "string",
+                            "required": false,
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_COLLECTION_BLACKLIST_WITHOUT_LIST_ENCLOSURE",
+                            "examples": [
+                                "collection1, collection2",
+                                "*",
+                                "coll*",
+                                "*tion"
+                            ],
+                            "title": "Collections blacklist",
+                            "default": ""
+                        },
+                        "bdlGovernanceCompatibleSemanticCollection": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_GOVERNANCE_COMPATIBLE_SEMANTIC_COLLECTION",
+                            "title": "Create semantic layer compatible with previous Crossdata versions?",
+                            "default": true
+                        },
+                        "bdlGovernanceOntologyCreateOperationalViews": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_GOVERNANCE_ONTOLOGY_CREATE_OPERATIONAL_VIEWS",
+                            "title": "Create operational semantic layer?",
+                            "default": true
+                        },
+                        "bdlGovernanceOntologyCreateSecuredOperationalViews": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_PUBLISH_SECURED_OPERATIONAL_CONCEPTS",
+                            "title": "Secure operational semantic layer?",
+                            "default": true
+                        },
+                        "bdlGovernanceOntologyUseOperationalExtensionsWithSchema": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_AGENT_USE_OPERATIONAL_EXTENSIONS_WITH_SCHEMA",
+                            "title": "Use schema while calling extensions at operational semantic layer?",
+                            "default": false
+                        },
+                        "bdlGovernanceOntologyCreateAbstractConcepts": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_GOVERNANCE_ONTOLOGY_CREATE_ABSTRACT_CONCEPTS",
+                            "title": "Create abstract concepts?",
+                            "default": false
+                        },
+                        "publisherCronSettings": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "standard"
+                            },
+                            "name": "publisherCronSettings",
+                            "title": "Publisher Cron settings",
+                            "description": "Define when will the agent publish collection layers",
+                            "properties": {
+                                "bdlAgentCronPeriod": {
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_CRON_PERIOD",
+                                    "title": "Publisher mode execution period/cron",
+                                    "default": "15 seconds"
+                                },
+                                "bdlAgentForcedCronEnabled": {
+                                    "type": "boolean",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_FORCED_CRON_ENABLED",
+                                    "title": "Force publisher mode execution periodically?",
+                                    "default": true
+                                },
+                                "bdlAgentForcedCronPeriod": {
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_FORCED_CRON_PERIOD",
+                                    "examples": [
+                                        "10000",
+                                        "2 hours",
+                                        "* * 0 ? * MON-FRI"
+                                    ],
+                                    "ui": {
+                                        "visible": {
+                                            "bdlAgentForcedCronEnabled": true
+                                        }
+                                    },
+                                    "title": "Publisher mode forced execution period/cron",
+                                    "default": "2 hours"
+                                },
+                                "bdlAgentForcedCronRetryAttempts": {
+                                    "type": "number",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_FORCED_CRON_RETRY_ATTEMPTS",
+                                    "ui": {
+                                        "visible": {
+                                            "bdlAgentForcedCronEnabled": true
+                                        }
+                                    },
+                                    "title": "Publisher mode forced execution retry attempts",
+                                    "default": 15
+                                }
+                            },
+                            "required": []
+                        }
+                    },
+                    "required": []
+                },
+                "optimizerSettings": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion",
+                        "visible": {
+                            "bdlAgentOptimizerMode": true
+                        }
+                    },
+                    "name": "optimizerSettings",
+                    "title": "Optimizer settings",
+                    "description": "Optimizer configuration settings",
+                    "properties": {
+                        "bdlAgentJdbcOptimizerFallbackToDialects": {
+                            "description": "When no optimization could be found using memory-based mode, sets if optimizer should fallback to dialects-based mode",
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "OPTIMIZER_USE_DIALECTS",
+                            "title": "Fallback to dialects-based optimization?",
+                            "default": true
+                        },
+                        "bdlAgentJdbcOptimizerForceForcedPartitionColumn": {
+                            "description": "Optimizer will use forcedPartitionColumn even if it is not valid",
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "OPTIMIZER_FORCE_FORCED_PARTITION_COLUMN",
+                            "title": "Use forcedPartitionColumn always?",
+                            "default": true
+                        },
+                        "bdlAgentJdbcOptimizerInitialSize": {
+                            "description": "Number of rows to be loaded when starting optimization process",
+                            "type": "number",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "OPTIMIZER_PARTITION_INITIAL_SIZE",
+                            "title": "Partition's initial size",
+                            "default": 10000
+                        },
+                        "bdlAgentJdbcOptimizerMemorySize": {
+                            "description": "Maximum memory to be used to calculate partitioning. It should be desired partition size plus ~60Mb",
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "OPTIMIZER_TEST_MEMORY_SIZE",
+                            "title": "Memory limit",
+                            "default": "192m"
+                        },
+                        "optimizerCronSettings": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "standard"
+                            },
+                            "name": "optimizerCronSettings",
+                            "title": "Optimizer Cron settings",
+                            "description": "Define when will the agent optimize JDBC tables",
+                            "properties": {
+                                "bdlAgentJdbcOptimizationCronPeriod": {
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_JDBC_OPTIMIZER_CRON_PERIOD",
+                                    "title": "Optimizer mode execution period/cron",
+                                    "default": "5 minutes"
+                                },
+                                "bdlAgentJdbcOptimizationForcedCronEnabled": {
+                                    "type": "boolean",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_JDBC_OPTIMIZER_FORCED_CRON_ENABLED",
+                                    "title": "Force optimizer mode execution periodically?",
+                                    "default": true
+                                },
+                                "bdlAgentJdbcOptimizationForcedCronPeriod": {
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_JDBC_OPTIMIZER_FORCED_CRON_PERIOD",
+                                    "examples": [
+                                        "10000",
+                                        "2 hours",
+                                        "* * 0 ? * MON-FRI"
+                                    ],
+                                    "ui": {
+                                        "visible": {
+                                            "bdlAgentJdbcOptimizationForcedCronEnabled": true
+                                        }
+                                    },
+                                    "title": "Optimizer mode forced execution period/cron",
+                                    "default": "* * 0 ? * MON-FRI"
+                                },
+                                "bdlAgentJdbcOptimizationForcedCronRetryAttempts": {
+                                    "type": "number",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_AGENT_JDBC_OPTIMIZER_FORCED_CRON_RETRY_ATTEMPTS",
+                                    "ui": {
+                                        "visible": {
+                                            "bdlAgentJdbcOptimizationForcedCronEnabled": true
+                                        }
+                                    },
+                                    "title": "Optimizer mode forced execution retry attempts",
+                                    "default": 15
+                                }
+                            },
+                            "required": []
+                        }
+                    },
+                    "required": []
+                },
+                "logging": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion"
+                    },
+                    "name": "logging",
+                    "title": "Logging settings",
+                    "description": "Logging configuration settings",
+                    "properties": {
+                        "bdlLogLevel": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_LOG_LEVEL",
+                            "title": "Log level",
+                            "enum": [
+                                "TRACE",
+                                "DEBUG",
+                                "INFO",
+                                "WARN",
+                                "ERROR"
+                            ],
+                            "default": "INFO"
+                        },
+                        "bdlLoggingType": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_LOGGING_TYPE",
+                            "title": "Logging type",
+                            "enum": [
+                                "CentralizedJSON",
+                                "Centralized"
+                            ],
+                            "default": "CentralizedJSON"
+                        }
+                    },
+                    "required": []
+                },
+                "healthcheck": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion"
+                    },
+                    "name": "healthcheck",
+                    "title": "Health check settings",
+                    "description": "Health check configuration settings",
+                    "properties": {
+                        "healthCheckEnabled": {
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_SERVER_HEALTHCHECK_ENABLED",
+                            "title": "Enable health checks?",
+                            "default": true
+                        },
+                        "asyncHealthCheck": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "accordion"
+                            },
+                            "name": "asyncHealthCheck",
+                            "title": "Asynchronous health check settings",
+                            "description": "Common configuration for asynchronous health checks",
+                            "properties": {
+                                "asyncHealthCheckInterval": {
+                                    "description": "How often asynchronous health checks will be executed",
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_SERVER_ASYNCHRONOUS_HEALTHCHECK_DELAY",
+                                    "title": "Interval",
+                                    "default": "30 seconds"
+                                }
+                            },
+                            "required": []
+                        },
+                        "adaptiveAsyncHealthCheck": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "ui": {
+                                "component": "accordion"
+                            },
+                            "name": "adaptiveAsyncHealthCheck",
+                            "title": "Adaptive asynchronous health check settings",
+                            "description": "Common configuration for adaptive asynchronous health checks",
+                            "properties": {
+                                "adaptiveAsyncHealthCheckInitialDelay": {
+                                    "description": "Starting delay to execute adaptive health checks",
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_SERVER_ADAPTIVE_HEALTHCHECK_INITIAL_DELAY",
+                                    "title": "Initial delay",
+                                    "default": "15 seconds"
+                                },
+                                "adaptiveAsyncHealthCheckMinDelay": {
+                                    "description": "Minimum delay to execute adaptive health checks. Adaptive health checks will be executed with this delay at most.",
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_SERVER_ADAPTIVE_HEALTHCHECK_MINIMUM_DELAY",
+                                    "title": "Minimum delay",
+                                    "default": "5 seconds"
+                                },
+                                "adaptiveAsyncHealthCheckMaxDelay": {
+                                    "description": "Maximum delay to execute adaptive health checks. Adaptive health checks will be executed with this delay at least.",
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_SERVER_ADAPTIVE_HEALTHCHECK_MAXIMUM_DELAY",
+                                    "title": "Maximum delay",
+                                    "default": "1 hour"
+                                },
+                                "adaptiveAsyncHealthCheckDelayFactor": {
+                                    "description": "Factor to apply to current delay to get next delay (depending on health check's status)",
+                                    "type": "string",
+                                    "readOnly": false,
+                                    "application": false,
+                                    "level": 1,
+                                    "internalName": "BDL_SERVER_ADAPTIVE_HEALTHCHECK_DELAY_FACTOR",
+                                    "title": "Scaling factor",
+                                    "default": "2.0"
+                                }
+                            },
+                            "required": []
+                        }
+                    },
+                    "required": []
+                },
+                "prometheusMetrics": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion"
+                    },
+                    "name": "prometheusMetrics",
+                    "title": "Prometheus metrics",
+                    "description": "Enable the Prometheus-style metrics endpoint.",
+                    "properties": {
+                        "bdlMetricsPrometheusEnabled": {
+                            "description": "Enable the Prometheus-style metrics endpoint.",
+                            "type": "boolean",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_SERVER_PROMETHEUS_ENABLED",
+                            "title": "Prometheus metrics",
+                            "default": true
+                        },
+                        "bdlMetricsPrometheusPath": {
+                            "description": "Prometheus metrics endpoint context path.",
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_SERVER_PROMETHEUS_PATH",
+                            "title": "Endpoint name",
+                            "default": "metrics"
+                        }
+                    },
+                    "required": []
+                },
+                "zookeeper": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "accordion"
+                    },
+                    "name": "zookeeper",
+                    "title": "Zookeeper settings",
+                    "description": "Common configuration for Crossdata catalogs inside Zookeeper",
+                    "properties": {
+                        "bdlCoreCatalogZookeeperConnectionTimeout": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_CORE_CATALOG_ZOOKEEPER_CONNECTIONTIMEOUT",
+                            "title": "Connection timeout",
+                            "default": "15s"
+                        },
+                        "prerequisitesZkPath": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "PREREQUISITES_ZK_PATH",
+                            "title": "Path prerequisites",
+                            "default": ""
+                        },
+                        "bdlCoreCatalogZookeeperSessionTimeout": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_CORE_CATALOG_ZOOKEEPER_SESSIONTIMEOUT",
+                            "title": "Session timeout",
+                            "default": "60s"
+                        },
+                        "bdlCoreCatalogZookeeperRetryInterval": {
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_CORE_CATALOG_ZOOKEEPER_RETRYINTERVAL",
+                            "title": "Retry interval",
+                            "default": "10s"
+                        },
+                        "bdlCoreCatalogZookeeperRetryAttempts": {
+                            "type": "number",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_CORE_CATALOG_ZOOKEEPER_RETRYATTEMPTS",
+                            "title": "Retry attempts",
+                            "default": 3
+                        }
+                    },
+                    "required": []
+                }
+            },
+            "required": []
+        },
+        "placements": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": null,
+            "name": "placements",
+            "title": "Placements",
+            "description": "Constraints configuration.",
+            "properties": {
+                "marathonConstraint": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": {
+                        "component": "standard"
+                    },
+                    "name": "marathonConstraint",
+                    "title": "Marathon Constraint",
+                    "description": "",
+                    "properties": {
+                        "constraintName": {
+                            "description": "Set the name of the given constraint",
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "SERVICE_CONSTRAINT_NAME",
+                            "examples": [
+                                "tenant"
+                            ],
+                            "title": "Constraint name",
+                            "default": ""
+                        },
+                        "constraintOperator": {
+                            "description": "Set operator to run the constraint",
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "SERVICE_CONSTRAINT_OPERATOR",
+                            "examples": [
+                                "CLUSTER"
+                            ],
+                            "title": "Constraint operator",
+                            "default": ""
+                        },
+                        "constraintValue": {
+                            "description": "Set the value of the constraint",
+                            "type": "string",
+                            "readOnly": false,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "SERVICE_CONSTRAINT_VALUE",
+                            "examples": [
+                                "tenant1"
+                            ],
+                            "title": "Constraint value",
+                            "default": ""
+                        }
+                    },
+                    "required": []
+                }
+            },
+            "required": []
+        },
+        "environment": {
+            "type": "object",
+            "additionalProperties": false,
+            "ui": null,
+            "name": "environment",
+            "title": "Environment",
+            "description": "Environment",
+            "properties": {
+                "vault": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": null,
+                    "name": "vault",
+                    "title": "Vault",
+                    "description": "vault",
+                    "properties": {
+                        "vaultHost": {
+                            "type": "string",
+                            "readOnly": true,
+                            "application": false,
+                            "level": 1,
+                            "globalParameter": "globals.vault.vaultHost",
+                            "internalName": "VAULT_HOST",
+                            "title": "Vault host",
+                            "default": "vault.service.eos.yankee.labs.stratio.com"
+                        },
+                        "vaultPath": {
+                            "type": "string",
+                            "readOnly": true,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "VAULT_PATH",
+                            "title": "Vault path",
+                            "default": "userland"
+                        },
+                        "vaultPort": {
+                            "type": "number",
+                            "readOnly": true,
+                            "application": false,
+                            "level": 1,
+                            "globalParameter": "globals.vault.vaultPort",
+                            "internalName": "VAULT_PORT",
+                            "title": "Vault port",
+                            "default": 8200
+                        }
+                    },
+                    "required": []
+                },
+                "kerberos": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "ui": null,
+                    "name": "kerberos",
+                    "title": "Kerberos",
+                    "description": "kerberos",
+                    "properties": {
+                        "bdlKerberosRenewalInterval": {
+                            "type": "string",
+                            "readOnly": true,
+                            "application": false,
+                            "level": 1,
+                            "internalName": "BDL_KERBEROS_RENEWAL_INTERVAL",
+                            "title": "Bdl kerberos renewal interval",
+                            "default": "4h"
+                        }
+                    },
+                    "required": []
+                }
+            },
+            "required": []
+        }
+    }
+}

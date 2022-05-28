@@ -1,0 +1,113 @@
+{
+    "general": {
+        "serviceId": "/s000001/s000001-eureka",
+        "tenantName": "s000001-eureka",
+        "appname": "eureka",
+        "executePrerequisites": true,
+        "executePrerequisitesZkPolicy": true,
+        "externalConfiguration": {
+            "governanceSettings": {
+                "bdlAgentCollectionName": "*",
+                "bdlGovernanceBaseUri": "https://dg-businessglossary-api.governance.marathon.mesos:60000/dictionary",
+                "bdlGovernanceBpmEnabled": true
+            },
+            "CrossdataCatalogSettings": {
+                "catalogType": "Zookeeper",
+                "bdlCatalogsDefinitionMode": false,
+                "zookeeperName": "s000001-zk-userland.s000001",
+                "zookeeperNamePath": "/s000001/s000001-zk-userland",
+                "zookeeperChroot": "",
+                "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
+                "bdlCatalogsAdvancedDefinition": ""
+            }
+        },
+        "identity": {
+            "mesosPrincipal": "open",
+            "approlename": "s000001"
+        },
+        "calico": {
+            "networkName": "s000001-core"
+        },
+        "resources": {
+            "INSTANCES": 1,
+            "CPUs": 2,
+            "MEM": 2048,
+            "DISK": 0
+        }
+    },
+    "settings": {
+        "bdlAgentPublisherMode": true,
+        "bdlAgentOptimizerMode": true,
+        "bdlAgentAdditionalJars": "",
+        "publisherSettings": {
+            "bdlAgentCollectionBlacklist": "",
+            "bdlGovernanceCompatibleSemanticCollection": true,
+            "bdlGovernanceOntologyCreateOperationalViews": true,
+            "bdlGovernanceOntologyCreateSecuredOperationalViews": true,
+            "bdlGovernanceOntologyUseOperationalExtensionsWithSchema": false,
+            "bdlGovernanceOntologyCreateAbstractConcepts": false,
+            "publisherCronSettings": {
+                "bdlAgentCronPeriod": "15 seconds",
+                "bdlAgentForcedCronEnabled": true,
+                "bdlAgentForcedCronPeriod": "2 hours",
+                "bdlAgentForcedCronRetryAttempts": 15
+            }
+        },
+        "optimizerSettings": {
+            "bdlAgentJdbcOptimizerFallbackToDialects": true,
+            "bdlAgentJdbcOptimizerForceForcedPartitionColumn": true,
+            "bdlAgentJdbcOptimizerInitialSize": 10000,
+            "bdlAgentJdbcOptimizerMemorySize": "192m",
+            "optimizerCronSettings": {
+                "bdlAgentJdbcOptimizationCronPeriod": "5 minutes",
+                "bdlAgentJdbcOptimizationForcedCronEnabled": true,
+                "bdlAgentJdbcOptimizationForcedCronPeriod": "* * 0 ? * MON-FRI",
+                "bdlAgentJdbcOptimizationForcedCronRetryAttempts": 15
+            }
+        },
+        "logging": {
+            "bdlLogLevel": "INFO",
+            "bdlLoggingType": "CentralizedJSON"
+        },
+        "healthcheck": {
+            "healthCheckEnabled": true,
+            "asyncHealthCheck": {
+                "asyncHealthCheckInterval": "30 seconds"
+            },
+            "adaptiveAsyncHealthCheck": {
+                "adaptiveAsyncHealthCheckInitialDelay": "15 seconds",
+                "adaptiveAsyncHealthCheckMinDelay": "5 seconds",
+                "adaptiveAsyncHealthCheckMaxDelay": "1 hour",
+                "adaptiveAsyncHealthCheckDelayFactor": "2.0"
+            }
+        },
+        "prometheusMetrics": {
+            "bdlMetricsPrometheusEnabled": true,
+            "bdlMetricsPrometheusPath": "metrics"
+        },
+        "zookeeper": {
+            "bdlCoreCatalogZookeeperConnectionTimeout": "15s",
+            "prerequisitesZkPath": "",
+            "bdlCoreCatalogZookeeperSessionTimeout": "60s",
+            "bdlCoreCatalogZookeeperRetryInterval": "10s",
+            "bdlCoreCatalogZookeeperRetryAttempts": 3
+        }
+    },
+    "placements": {
+        "marathonConstraint": {
+            "constraintName": "",
+            "constraintOperator": "",
+            "constraintValue": ""
+        }
+    },
+    "environment": {
+        "vault": {
+            "vaultHost": "vault.service.eos.yankee.labs.stratio.com",
+            "vaultPath": "userland",
+            "vaultPort": 8200
+        },
+        "kerberos": {
+            "bdlKerberosRenewalInterval": "4h"
+        }
+    }
+}
