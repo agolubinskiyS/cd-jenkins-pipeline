@@ -17,7 +17,6 @@
         "externalConfiguration": {
             "CrossdataCatalogSettings": {
                 "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
-                "zookeeperNamePath": "/s000001/s000001-zk-userland",
                 "zookeeperChroot": "",
                 "catalogType": "Zookeeper",
                 "bdlCatalogsDefinitionMode": false,

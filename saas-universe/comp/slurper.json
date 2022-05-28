@@ -18,10 +18,11 @@
         "executePrerequisitesZkPolicy": true,
         "externalConfiguration": {
             "CrossdataCatalogSettings": {
-                "bdlCatalogsAdvancedDefinition": "",
-                "bdlCatalogsDefinitionMode": true,
+                "bdlCatalogsBasicDefinitionPrefixes": "xdcatalog",
+                "bdlCatalogsDefinitionMode": false,
                 "catalogType": "Zookeeper",
-                "zookeeperNamePath": "/s000001/s000001-zk-userland"
+                "zookeeperChroot": "",
+                "zookeeperName": "s000001-zk-userland.s000001"
             },
             "governanceSettings": {
                 "bdlAgentCollectionName": "*",
